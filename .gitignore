@@ -1,0 +1,6 @@
+repots
+data
+__pycache__
+.dict
+reports/summary.txt
+data/expenses.csv
