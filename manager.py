@@ -1,8 +1,7 @@
 import csv
-from expense import expense
+from expense import Expense
 from collections import deque
 from datetime import datetime
-import pandas as pd
 from tabulate import tabulate
 
 
@@ -26,16 +25,8 @@ def instantiate_from_csv (class_name, filename='data/expenses.csv'):
                 description = expenses.get('description')
                 )
 
-def write_tabulated_summary_to_file(total, filter, average, filename="reports/summary.txt"):
-    table = tabulate(filter, headers="keys", tablefmt="grid")
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(f"Total Expenses : {total}")
-        f.write("\n\nBy category :\n")
-        f.write(table)
-        f.write(f"\n\nDaily average : {average}")
 
-
-def last_history(args : expense, filename='data/expenses.csv') :
+def last_history(args : Expense, filename='data/expenses.csv') :
     N_rows = args.last
     with open(filename, 'r', newline='') as f:
         reader = csv.DictReader(f)
@@ -60,7 +51,7 @@ def last_history(args : expense, filename='data/expenses.csv') :
 
 
 
-def filter_by_date(args : expense, filename='data/expenses.csv'):
+def filter_by_date(args : Expense, filename='data/expenses.csv'):
     start_range = args.date_range_from
     end_range = args.to
     if not start_range or not end_range:
@@ -87,7 +78,7 @@ def filter_by_date(args : expense, filename='data/expenses.csv'):
     print(tabulate(table, headers=headers, tablefmt="grid"))
 
 
-def filter_by_category(args : expense, filename='data/expenses.csv') : 
+def filter_by_category(args : Expense, filename='data/expenses.csv') : 
     with open(filename, 'r', newline='') as f:
         reader = csv.DictReader(f)
         filtered_rows = [
@@ -108,15 +99,4 @@ def filter_by_category(args : expense, filename='data/expenses.csv') :
 
     print(tabulate(table, headers=headers, tablefmt="grid"))
 
-
-def summary_maker(filename='data/expenses.csv') :
-    df = pd.read_csv(filename)
-    total = df.groupby("category")["amount"].sum().sum()
-    filter = df.groupby("category")["amount"].sum().reset_index()
-    average = df.groupby("date")["amount"].mean().mean()
-    print(f"Total Expenses : {total}")
-    print("\nBy category :")
-    print(tabulate(filter, headers='keys', tablefmt='grid'))
-    print(f"\nDaily average : {average}")
-    write_tabulated_summary_to_file(total, filter, average)
 

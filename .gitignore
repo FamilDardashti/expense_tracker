@@ -1,6 +1,5 @@
-repots
-data
+reports/
+data/
 __pycache__
 .dict
-reports/summary.txt
-data/expenses.csv
+.dist

@@ -1,14 +1,12 @@
 import argparse
-import csv
-from expense import expense
+from expense import Expense
 from utils import validate_date
 from utils import positive_amount
 from manager import save_in_csv
-from manager import instantiate_from_csv
 from manager import last_history
 from manager import filter_by_date
 from manager import filter_by_category
-from manager import summary_maker
+from report import summary_maker
 
 #CLI 
 def parser():
@@ -17,7 +15,7 @@ def parser():
     subparsers = parser.add_subparsers(dest="command")
 
     add_parser = subparsers.add_parser("add", help="Add a new expense")
-    add_parser.add_argument("--date", type=str, required=True, help="Expense date")
+    add_parser.add_argument("--date", type=validate_date, required=True, help="Expense date")
     add_parser.add_argument("--amount", type=positive_amount, required=True, help="Expense amount")
     add_parser.add_argument("--category", type=str, required=True, help="Expense category")
     add_parser.add_argument("--description", type=str, required=False, help="Expense discription")
@@ -37,43 +35,64 @@ def parser():
     args = parser.parse_args()
     return args
 
-def obj_maker (args):
-    new_expense = expense(date = args.date,
-                         amount = args.amount,
-                         category = args.category,
-                         description = args.description
-                         )
-    save_in_csv(new_expense)
+
+def handle_add(args):
+    try:
+        new_expense = Expense(
+            amount=args.amount,
+            date=args.date,
+            category=args.category,
+            description=args.description or ""
+        )
+
+        save_in_csv(new_expense)
+        print("✅ Expense added successfully.")
+
+    except Exception as e:
+        print(f"❌ Error adding expense: {e}")
+
+def handle_history(args):
+    try:
+        if not args.filtered_by:
+            last_history(args.last)
+
+        elif args.filtered_by == "date":
+            filter_by_date(args.date_range_from, args.to)
+
+        elif args.filtered_by == "category":
+            filter_by_category(args.category)
+
+        else:
+            print("⚠️ Unsupported filter type.")
+
+    except Exception as e:
+        print(f"❌ Error displaying history: {e}")
+
+def handle_summary(args):
+    try:
+        summary_maker()  
+    except Exception as e:
+        print(f"❌ Error generating summary: {e}")
 
 #command analys
 def command_analyser(args) :
     if args.command == "add" :
-        assert validate_date(args.date) , "❌ Error: Enter date in YYYY-MM-DD format"
-        obj_maker(args)
+        handle_add(args)
         
     elif args.command == "history" :
-        if not args.filtered_by:
-            last_history(args)
-        
-        elif args.filtered_by == "date" :
-            filter_by_date(args)
-
-        elif args.filtered_by == "category" :
-            filter_by_category(args)
-
-        else : 
-            print("chose date or category filtering")
-            exit(1) 
+        handle_history(args)
             
 
 
     elif args.command == "summary":
-        summary_maker()
+        handle_summary(args)
 
 
     else :
         raise "invailable argument"
 
+def main() :
+    args = parser()
+    command_analyser(args)
 
-args = parser()
-command_analyser(args)
+main()
