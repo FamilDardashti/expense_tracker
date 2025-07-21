@@ -24,10 +24,10 @@ python main.py add --date 2025-07-11 --amount 10 --category donation --descripti
 python main.py add --date 2025-07-11 --amount 40 --category entertainment --description "concert ticket"
 
 
-python main.py add --date 2025-07-15 --amount 100 --category food --description "lunch at cafe"
 python main.py summary
 python main.py history
 python main.py history --last5
 python main.py history --filtered_by date --date_range_from 2025-07-01 --to 2025-07-15
+python main.py history --filtered_by category --category food
 
 

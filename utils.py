@@ -10,7 +10,7 @@ def validate_date(date_str):
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date_str):
         raise argparse.ArgumentTypeError("❌ Date must be in YYYY-MM-DD format")
     try:
-        return datetime.strptime(date_str, "%Y-%m-%d")
+        return datetime.strptime(date_str, "%Y-%m-%d").date()
     except ValueError:
         raise argparse.ArgumentTypeError("❌ Invalid date (like 2025-13-40)")
 

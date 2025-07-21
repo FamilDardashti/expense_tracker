@@ -78,6 +78,7 @@ def handle_summary(args):
 def command_analyser(args) :
     if args.command == "add" :
         handle_add(args)
+        print(args.date)
         
     elif args.command == "history" :
         handle_history(args)
