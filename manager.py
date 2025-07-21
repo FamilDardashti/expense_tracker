@@ -1,4 +1,5 @@
 import csv
+import os
 from expense import Expense
 from collections import deque
 from datetime import datetime
@@ -6,8 +7,16 @@ from tabulate import tabulate
 
 
 def save_in_csv (instance, filename='data/expenses.csv'):
+    file_exists = os.path.exists(filename)
+    is_empty = True
+
+    if file_exists:
+        is_empty = os.stat(filename).st_size == 0
+
     with open(filename, 'a', newline='') as f:
         writer = csv.writer(f)
+        if not file_exists or is_empty:
+            writer.writerow(["date", "amount", "category", "description"])
         writer.writerow( [ instance.date, instance.amount, instance.category, instance.description])
 
 
@@ -32,15 +41,6 @@ def last_history(args : Expense, filename='data/expenses.csv') :
         reader = csv.DictReader(f)
         reader = list(reader)
         last_history = deque(reader, maxlen=N_rows)
-    # print(reader)
-    # print ("date\t amount\t category\tdescription")
-    # for item in last_history:
-    #     print(f"{item.get('date')}\t{item.get('amount')}\t{item.get('category')}\t{item.get('description')}")
-    # print(history)
-    # print(f"{'Date':<12} {'Amount':>8} {'Category':<15} {'Description'}")
-    # print("-" * 60)
-    # for row in last_history:
-    #     print(f"{row['date']:<12} {float(row['amount']):>8.2f} {row['category']:<15} {row['description']}")
         table = [
             [item['date'], float(item['amount']), item['category'], item['description']]
             for item in last_history
@@ -64,10 +64,6 @@ def filter_by_date(args : Expense, filename='data/expenses.csv'):
             if start_range <= datetime.strptime(row['date'], "%Y-%m-%d") <= end_range
             ]
         filtered_rows.sort(key=lambda row: datetime.strptime(row['date'], "%Y-%m-%d"))
-        # print(f"{'Date':<12} {'Amount':>8} {'Category':<15} {'Description'}")
-        # print("-" * 60)
-        # for row in filtered_rows:
-        #     print(f"{row['date']:<12} {float(row['amount']):>8.2f} {row['category']:<15} {row['description']}")
         table = [
         [item['date'], float(item['amount']), item['category'], item['description']]
         for item in filtered_rows
@@ -86,10 +82,6 @@ def filter_by_category(args : Expense, filename='data/expenses.csv') :
             if row.get('category') == args.category
             ]
         filtered_rows.sort(key=lambda row: datetime.strptime(row['date'], "%Y-%m-%d"))
-    #         print(f"{'Date':<12} {'Amount':>8} {'Category':<15} {'Description'}")
-    # print("-" * 60)
-    # for row in filtered_rows:
-    #     print(f"{row['date']:<12} {float(row['amount']):>8.2f} {row['category']:<15} {row['description']}")
         table = [
         [item['date'], float(item['amount']), item['category'], item['description']]
         for item in filtered_rows
