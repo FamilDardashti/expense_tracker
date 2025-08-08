@@ -105,8 +105,10 @@ def command_analyser(args) :
     else :
         raise "invailable argument"
 
-def main() :
+def main():
     args = parser()
     command_analyser(args)
 
-main()
+
+if __name__ == "__main__":
+    main()
