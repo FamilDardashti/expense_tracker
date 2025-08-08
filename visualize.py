@@ -16,7 +16,7 @@ def chart_maker():
         plt.ylabel("Total Amount")
         plt.title("Total Expenses by Category")
         plt.tight_layout()
-        plt.savefig("reports/category_chart.png", dpi=300, bbox_inches="tight")
+        plt.savefig("category_spending_bar.png", dpi=300, bbox_inches="tight")
         plt.show()
         
         
@@ -25,7 +25,7 @@ def chart_maker():
         plt.ylabel("Total Amount")
         plt.title("Daily Total Expenses")
         plt.tight_layout()
-        plt.savefig("reports/category_chart.png", dpi=300, bbox_inches="tight")
+        plt.savefig("reports/daily_expense_line.png", dpi=300, bbox_inches="tight")
         plt.show()
 
     except Exception as e:
