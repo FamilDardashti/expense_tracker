@@ -29,5 +29,6 @@ python main.py history
 python main.py history --last5
 python main.py history --filtered_by date --date_range_from 2025-07-01 --to 2025-07-15
 python main.py history --filtered_by category --category food
+python main.py visualize
 
 

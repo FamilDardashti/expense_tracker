@@ -7,6 +7,8 @@ from manager import last_history
 from manager import filter_by_date
 from manager import filter_by_category
 from report import summary_maker
+from visualize import chart_maker
+
 
 #CLI 
 def parser():
@@ -19,8 +21,9 @@ def parser():
     add_parser.add_argument("--amount", type=positive_amount, required=True, help="Expense amount")
     add_parser.add_argument("--category", type=str, required=True, help="Expense category")
     add_parser.add_argument("--description", type=str, required=False, help="Expense discription")
-
     summary_parser = subparsers.add_parser("summary", help="Generate expense summary")
+
+    visualize_parser = subparsers.add_parser("visualize", help="visualizes expenses")
 #history
     history_parser = subparsers.add_parser("history", help="Show expense history")
     history_parser.add_argument("--last", type=int, default=10)
@@ -74,6 +77,14 @@ def handle_summary(args):
     except Exception as e:
         print(f"❌ Error generating summary: {e}")
 
+
+def handle_visualize():
+    try:
+        chart_maker()  
+    except Exception as e:
+        print(f"❌ Error generating summary: {e}")
+
+
 #command analys
 def command_analyser(args) :
     if args.command == "add" :
@@ -84,9 +95,11 @@ def command_analyser(args) :
         handle_history(args)
             
 
-
     elif args.command == "summary":
         handle_summary(args)
+
+    elif args.command == "visualize":
+        handle_visualize()
 
 
     else :
